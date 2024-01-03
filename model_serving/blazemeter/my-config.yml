@@ -1,0 +1,17 @@
+execution:
+- concurrency: 1
+  ramp-up: 10s
+  hold-for: 10m
+  scenario: POST Request
+
+scenarios:
+  POST Request:
+    requests:
+    - url: http://host.docker.internal:8501/v1/models/textclassification:predict
+      method: POST
+      headers:
+        Content-Type: application/json
+      body: >
+        {
+          "instances": ["what pep8 rule i am breaking, given the global interpreter lock (gil) is ignored"]
+        }

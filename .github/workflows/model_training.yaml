@@ -1,0 +1,42 @@
+name: Model Training Pipeline
+
+on:
+  push:
+    paths:
+      - 'model_training/**/*'
+  pull_request:
+    paths:
+      - 'model_training/**/*'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:  
+  azure-build-and-deploy:
+      runs-on: ubuntu-latest
+      steps:
+      # checkout the repo
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Set up Docker Build tag'
+        id: docker_tag
+        run: |
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            echo "::set-output name=tag::master"
+          else
+            echo "::set-output name=tag::${{ github.sha }}"
+          fi
+
+      - name: 'Build and push image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run: |
+          docker build model_training -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/mlopstextclassification_model_training:${{ steps.docker_tag.outputs.tag }} --build-arg MLFLOW_DATABRICKS_URL=${{ secrets.MLFLOW_DATABRICKS_URL }} --build-arg MLFLOW_DATABRICKS_TOKEN=${{ secrets.MLFLOW_DATABRICKS_TOKEN }} -f model_training/Dockerfile
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/mlopstextclassification_model_training:${{ steps.docker_tag.outputs.tag }}
