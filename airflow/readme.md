@@ -15,13 +15,3 @@ http://localhost:8081
 ```
 4. create databricks-connection
 5. run airflow dag
-
-
-# Problems
-
-```
-docker run airflow_img
-/usr/bin/env: ‘bash\r’: Permission denied
-
-fix with -> dos2unix entrypoint.sh
-```
