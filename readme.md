@@ -1,4 +1,4 @@
-# Public Repo - Text Classification Auto-Trainable Machine Learning Pipeline
+# [Public Repo - Text Classification Auto-Trainable Machine Learning Pipeline](https://medium.com/@paulomiguelbarbosa/autonomous-machine-learning-pipeline-project-design-and-execution-f62870c230ef)
 This project is a machine learning pipeline designed for classifying Stack Overflow questions into categories based on programming languages such as Python, C#, Java, or JavaScript. The pipeline emphasizes an auto-trainable and auto-deployable architecture, ensuring that models are continuously updated and deployed with minimal manual intervention.
 
 ## Key Features:
